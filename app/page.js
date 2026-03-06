@@ -601,7 +601,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
       >
         <div
           className={cn(
-            "relative h-36 h-48 overflow-hidden bg-gradient-to-r",
+            "relative h-36 h-44 overflow-hidden bg-gradient-to-r",
             data.color,
           )}
         >
@@ -1333,7 +1333,7 @@ export default function DeveloperProfile() {
                 isFlipped ? "pointer-events-none" : "z-20",
               )}
             >
-              <div className="relative h-36 h-48 overflow-hidden">
+              <div className="relative h-36 h-44 overflow-hidden">
                 {THEMES.map((theme, index) => (
                   <div
                     key={theme.name}
