@@ -802,7 +802,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  "flex items-center justify-center gap-2 w-full px-6 py-4 font-bold rounded-xl !text-white shadow-lg transition-all duration-300 ease-out hover:opacity-95 hover:shadow-xl hover:-translate-y-[1.2px] active:scale-95 cursor-pointer bg-gradient-to-r",
+                  "flex items-center justify-center gap-2 w-full px-6 py-4 font-bold rounded-xl !text-white shadow-lg transition-all duration-300 ease-out hover:opacity-95 hover:shadow-xl hover:-translate-y-[1.0px] active:scale-95 cursor-pointer bg-gradient-to-r",
                   data.color,
                 )}
               >
@@ -812,7 +812,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
             <button
               onClick={onFlipBack}
               className={cn(
-                "w-full flex items-center justify-center gap-2 px-6 py-4 sm:mb-2 font-bold text-slate-500 hover:text-slate-800 transition-colors cursor-pointer",
+                "w-full flex items-center justify-center gap-2 px-6 py-4 sm:mb-2 font-bold text-slate-500 hover:text-slate-600 transition-colors cursor-pointer duration-200",
                 mailStep !== "intro" &&
                   mailStep !== "icon_only" &&
                   "opacity-0 pointer-events-none",
