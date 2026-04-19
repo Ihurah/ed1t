@@ -152,7 +152,7 @@ const AnimationStyles = () => (
       }
       100% {
         transform: translateY(-50px) scale(1.1);
-        height: 180px;
+        height: 120px;
         opacity: 1;
       }
     }
@@ -487,6 +487,16 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
     setIsSending(false);
   }, [selectedSocial]);
 
+  // スクロールを上にスムーズに移動（紙が拡大される時）
+  useEffect(() => {
+    if (mailStep === "animating") {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  }, [mailStep]);
+
   const animStyles = useMemo(() => {
     const { duration: d, delay: w } = ANIM_SETTINGS;
     const totalDuration =
@@ -517,7 +527,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
       );
       return () => clearTimeout(timer);
     }
-  }, [formView, onFlipBack]);
+  }, [formView]);
 
   if (!data) return null;
 
@@ -601,14 +611,14 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
       >
         <div
           className={cn(
-            "relative h-36 h-44 overflow-hidden bg-gradient-to-r",
+            "relative h-36 sm:h-44 overflow-hidden bg-gradient-to-r",
             data.color,
           )}
         >
           <div className="absolute inset-0 bg-black/10" />
         </div>
-        <div className="px-10 pt-2 pb-10 flex-1 flex flex-col">
-          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-8 mb-8">
+        <div className="px-10 pt-2 sm:pb-10 flex-1 flex flex-col">
+          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-8 mb-5 sm:mb-8">
             <div className="relative animate-float">
               <div
                 className={cn(
@@ -620,7 +630,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
               </div>
             </div>
             <div className="text-center sm:text-left pb-2">
-              <h2 className="text-3xl font-black text-slate-800 tracking-thight">
+              <h2 className="text-[27px] font-black text-slate-800 tracking-thight">
                 {data.title}
               </h2>
               <span
@@ -634,7 +644,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
             </div>
           </div>
           <div className="bg-slate-50/80 p-6 rounded-2xl border border-slate-100 mb-6 shadow-[inset_2px_2px_7px_rgba(0,0,0,0.12)]">
-            <p className="text-sm sm:text-base leading-loose text-slate-600 font-medium tracking-[0.04rem]">
+            <p className="text-[13px] sm:text-base leading-loose text-slate-600 font-medium tracking-[0.04rem]">
               {data.description}
             </p>
           </div>
@@ -1169,6 +1179,9 @@ export default function DeveloperProfile() {
   const [selectedSocial, setSelectedSocial] = useState(null);
   const [socialData, setSocialData] = useState(INITIAL_SOCIAL_DATA);
   const timeoutRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const scrollAnimationRef = useRef(null);
+  const isScrollingRef = useRef(false);
 
   useEffect(() => {
     const fetchSocials = async () => {
@@ -1244,7 +1257,7 @@ export default function DeveloperProfile() {
           }
         }
       } catch (error) {
-        console.error("Instagram Fetch Error:", error);
+        // Silent error handling
       }
     };
     fetchSocials();
@@ -1275,6 +1288,48 @@ export default function DeveloperProfile() {
     };
   }, []);
   const currentTheme = THEMES[themeIndex];
+
+  // Easing関数 (easeOutQuart - より滑らか)
+  const easeOutQuart = (t) => {
+    return 1 - Math.pow(1 - t, 4);
+  };
+
+  // 強制スクロール停止関数
+  const cancelScrollAnimation = () => {
+    if (scrollAnimationRef.current) {
+      cancelAnimationFrame(scrollAnimationRef.current);
+      scrollAnimationRef.current = null;
+    }
+  };
+
+  // スムーズなスクロール関数
+  const smoothScrollToTop = (element) => {
+    if (!element) return;
+    cancelScrollAnimation(); // 既存の強制スクロールがあればキャンセル
+    
+    const startTop = element.scrollTop;
+    if (startTop === 0) return;
+    
+    const duration = 1200; // 1.5秒かけてスクロール
+    const startTime = performance.now();
+    isScrollingRef.current = true; // アニメーション中フラグをON
+
+    const scroll = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutQuart(progress);
+      element.scrollTop = startTop * (1 - easedProgress);
+
+      if (progress < 1) {
+        scrollAnimationRef.current = requestAnimationFrame(scroll);
+      } else {
+        scrollAnimationRef.current = null;
+        isScrollingRef.current = false; // アニメーション終了フラグをOFF
+      }
+    };
+    scrollAnimationRef.current = requestAnimationFrame(scroll);
+  };
+
   useEffect(() => {
     const updateStatus = () => {
       const now = new Date();
@@ -1289,6 +1344,66 @@ export default function DeveloperProfile() {
     const interval = setInterval(updateStatus, 1000 * 60);
     return () => clearInterval(interval);
   }, []);
+
+  // SNSカード選択時やメールページ遷移時にスクロール上移動
+  useEffect(() => {
+    if (selectedSocial && scrollContainerRef.current) {
+      smoothScrollToTop(scrollContainerRef.current);
+    }
+  }, [selectedSocial]);
+
+  // カードがめくられるときにスクロール上へ移動
+  useEffect(() => {
+    if (isFlipped && scrollContainerRef.current) {
+      // カードのめくる時間(700ms)のほぼ終わり頃(600ms)からスクロール開始
+      const timer = setTimeout(() => {
+        smoothScrollToTop(scrollContainerRef.current);
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [isFlipped]);
+
+  // ユーザーのスクロール操作を検出して強制スクロールをキャンセル
+  useEffect(() => {
+    const element = scrollContainerRef.current;
+    if (!element) return;
+
+    const handleScroll = () => {
+      // アニメーション中でなければ、スクロールアニメーションをキャンセル
+      if (!isScrollingRef.current) {
+        cancelScrollAnimation();
+      }
+    };
+
+    const handleWheel = (e) => {
+      // アニメーション中なら操作をキャンセル
+      if (isScrollingRef.current) {
+        e.preventDefault();
+      } else {
+        cancelScrollAnimation();
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      // アニメーション中なら操作をキャンセル
+      if (isScrollingRef.current) {
+        e.preventDefault();
+      } else {
+        cancelScrollAnimation();
+      }
+    };
+
+    element.addEventListener("scroll", handleScroll);
+    element.addEventListener("wheel", handleWheel, { passive: false });
+    element.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+    return () => {
+      element.removeEventListener("scroll", handleScroll);
+      element.removeEventListener("wheel", handleWheel);
+      element.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, []);
+
   const statusConfig = {
     online: { color: "bg-green-500", shadow: "bg-green-500", pulse: true },
     away: { color: "bg-yellow-500", shadow: "bg-yellow-500", pulse: false },
@@ -1319,7 +1434,7 @@ export default function DeveloperProfile() {
           )}
         />
       </div>
-      <div className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden no-scrollbar flex items-start sm:items-center justify-center p-4 sm:p-6 py-6">
+      <div ref={scrollContainerRef} className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden no-scrollbar flex items-start sm:items-center justify-center p-4 sm:p-6 py-6">
         <div className="w-full max-w-lg relative z-10 perspective-1000">
           <div
             className={cn(
@@ -1333,7 +1448,7 @@ export default function DeveloperProfile() {
                 isFlipped ? "pointer-events-none" : "z-20",
               )}
             >
-              <div className="relative h-36 h-44 overflow-hidden">
+              <div className="relative h-38 sm:h-44 overflow-hidden">
                 {THEMES.map((theme, index) => (
                   <div
                     key={theme.name}
@@ -1359,7 +1474,7 @@ export default function DeveloperProfile() {
                 </div>
               </div>
               <div className="px-10 pt-2 pb-10 flex-1 flex flex-col">
-                <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-8 mb-8">
+                <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-8 mb-5 sm:mb-8">
                   <div className="relative animate-float">
                     <img
                       src="/developer-icon.jpg"
@@ -1376,7 +1491,7 @@ export default function DeveloperProfile() {
                     </div>
                   </div>
                   <div className="text-center sm:text-left pb-2">
-                    <h1 className="text-3xl font-black text-slate-800 tracking-tight">
+                    <h1 className="text-[27px] font-black text-slate-800 tracking-tight">
                       いふ
                     </h1>
                     <span
@@ -1390,7 +1505,7 @@ export default function DeveloperProfile() {
                   </div>
                 </div>
                 <div className="bg-slate-50/80 p-6 rounded-2xl border border-slate-100 mb-6 shadow-[inset_2px_2px_7px_rgba(0,0,0,0.12)]">
-                  <p className="text-sm sm:text-base leading-loose text-slate-600 font-medium tracking-[0.04rem]">
+                  <p className="text-[13px] sm:text-base leading-loose text-slate-600 font-medium tracking-[0.04rem]">
                     趣味でWeb開発。アマチュア高校生エディター。
                     <br />
                     不具合や改善についてはSNSやメールで。
