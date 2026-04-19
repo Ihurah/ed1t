@@ -626,7 +626,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
         >
           <div className="absolute inset-0 bg-black/10" />
         </div>
-        <div className="px-10 pt-2 sm:pb-10 flex-1 flex flex-col">
+        <div className="px-10 pt-2 pb-3 sm:pb-2 flex-1 flex flex-col">
           <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 -mt-8 mb-5 sm:mb-8">
             <div className="relative animate-float">
               <div
