@@ -495,6 +495,15 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
         behavior: "smooth",
       });
     }
+    // フォーム展開完了後にもスクロール
+    if (mailStep === "form") {
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }, 200); // アニメーション完了後のタイミング
+    }
   }, [mailStep]);
 
   const animStyles = useMemo(() => {
@@ -599,14 +608,14 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
 
   return (
     <div
-      className="relative overflow-hidden rounded-[32px] bg-white shadow-2xl h-full w-full"
+      className="relative overflow-hidden rounded-[32px] bg-white shadow-2xl w-full h-auto"
       style={animStyles.cssVars}
     >
       <div
         className={cn(
-          "flex flex-col h-full transition-all duration-700 ease-in-out absolute inset-0 z-10",
+          "flex flex-col z-10 transition-opacity duration-300",
+          mailStep === "form" ? "opacity-0 pointer-events-none" : "relative h-auto opacity-100",
           mailStep === "animating" ? "blur-sm opacity-50" : "",
-          mailStep === "form" ? "opacity-0 pointer-events-none" : "",
         )}
       >
         <div
@@ -618,7 +627,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
           <div className="absolute inset-0 bg-black/10" />
         </div>
         <div className="px-10 pt-2 sm:pb-10 flex-1 flex flex-col">
-          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-8 mb-5 sm:mb-8">
+          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 -mt-8 mb-5 sm:mb-8">
             <div className="relative animate-float">
               <div
                 className={cn(
@@ -793,7 +802,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  "flex items-center justify-center gap-2 w-full px-6 py-4 font-bold rounded-xl !text-white shadow-lg transition-all duration-300 ease-out hover:opacity-90 hover:shadow-xl hover:-translate-y-0.5 active:scale-95 cursor-pointer bg-gradient-to-r",
+                  "flex items-center justify-center gap-2 w-full px-6 py-4 font-bold rounded-xl !text-white shadow-lg transition-all duration-300 ease-out hover:opacity-95 hover:shadow-xl hover:-translate-y-[1.2px] active:scale-95 cursor-pointer bg-gradient-to-r",
                   data.color,
                 )}
               >
@@ -803,7 +812,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
             <button
               onClick={onFlipBack}
               className={cn(
-                "w-full flex items-center justify-center gap-2 px-6 py-4 font-bold text-slate-500 hover:text-slate-800 transition-colors cursor-pointer",
+                "w-full flex items-center justify-center gap-2 px-6 py-4 mb-2 font-bold text-slate-500 hover:text-slate-800 transition-colors cursor-pointer",
                 mailStep !== "intro" &&
                   mailStep !== "icon_only" &&
                   "opacity-0 pointer-events-none",
@@ -854,7 +863,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
       )}
 
       {mailStep === "form" && (
-        <div className="absolute inset-0 z-30 flex flex-col bg-white animate-form-expand h-full w-full rounded-[32px] overflow-hidden shadow-[0_0_0_2px_#fff]">
+        <div className="absolute inset-0 z-30 flex flex-col bg-white animate-form-expand rounded-[32px] overflow-hidden shadow-[0_0_0_2px_#fff] w-full h-full">
           <div className="h-16 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-indigo-100 flex items-center px-6 gap-3 shrink-0">
             <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-sm">
               <MailIcon className="w-4 h-4" />
@@ -899,7 +908,134 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
               </p>
             </div>
           </div>
-          <div className="flex-1 relative overflow-hidden bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+          <div className="relative bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] flex-1 flex flex-col py-6 overflow-y-auto no-scrollbar">
+            {formView === "input" && (
+              <div className="px-6 flex flex-col gap-4 animate-fade-in-up">
+                <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm space-y-4">
+                  <div
+                    className="space-y-1 animate-content-fade-in relative z-30"
+                    style={{
+                      animationDelay:
+                        "calc(var(--w-expand) + var(--d-expand) + var(--wait-content) + 0.0s)",
+                    }}
+                  >
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
+                      Name
+                    </label>
+                    <RequiredInput
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      error={errors.name}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-300"
+                      placeholder="お名前を入力"
+                    />
+                  </div>
+                  <div
+                    className="space-y-1 animate-content-fade-in relative z-20"
+                    style={{
+                      animationDelay:
+                        "calc(var(--w-expand) + var(--d-expand) + var(--wait-content) + 0.1s)",
+                    }}
+                  >
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
+                      Email
+                    </label>
+                    <RequiredInput
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      error={errors.email}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-300"
+                      placeholder="メールアドレス"
+                    />
+                  </div>
+                  <div
+                    className="space-y-1 animate-content-fade-in relative z-10"
+                    style={{
+                      animationDelay:
+                        "calc(var(--w-expand) + var(--d-expand) + var(--wait-content) + 0.2s)",
+                    }}
+                  >
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
+                      Body
+                    </label>
+                    <RequiredTextarea
+                      name="body"
+                      value={formData.body}
+                      onChange={handleInputChange}
+                      error={errors.body}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none min-h-[120px] placeholder:text-slate-300 leading-relaxed"
+                      placeholder="お問い合わせ内容をご記入ください..."
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            {formView === "confirm" && (
+              <div className="px-6 flex flex-col gap-4 animate-fade-in-up">
+                <div className="bg-white p-5 rounded-xl border border-blue-100 shadow-sm space-y-5">
+                  <p className="text-xs text-center text-slate-500 font-bold mb-2">
+                    以下の内容で送信しますか？
+                  </p>
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
+                      Name
+                    </span>
+                    <p className="text-sm font-medium text-slate-700 px-1">
+                      {formData.name}
+                    </p>
+                  </div>
+                  <div className="w-full h-[1px] bg-slate-100"></div>
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
+                      Email
+                    </span>
+                    <p className="text-sm font-medium text-slate-700 px-1 break-all">
+                      {formData.email}
+                    </p>
+                  </div>
+                  <div className="w-full h-[1px] bg-slate-100"></div>
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
+                      Body
+                    </span>
+                    <p className="text-sm font-medium text-slate-700 px-1 whitespace-pre-wrap leading-relaxed">
+                      {formData.body}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            {formView === "success" && (
+              <div className="px-6 flex flex-col items-center justify-center gap-6">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center shadow-sm">
+                  <svg
+                    className="w-10 h-10 text-green-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div className="text-center space-y-2">
+                  <h3 className="text-xl font-bold text-slate-800">Thank you!</h3>
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                    お問い合わせありがとうございます。
+                    <br />
+                    内容を確認次第、ご連絡いたします。
+                  </p>
+                </div>
+              </div>
+            )}
             <div
               className="absolute inset-0 p-6 flex flex-col gap-4 z-20 bg-white/0 pointer-events-none animate-skeleton-fade-out"
               aria-hidden="true"
@@ -917,150 +1053,6 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
                   <div className="w-10 h-3 bg-slate-200 rounded"></div>
                   <div className="w-full h-32 bg-slate-100 rounded-lg"></div>
                 </div>
-              </div>
-            </div>
-            <div
-              className={cn(
-                "absolute inset-0 flex flex-col p-6 gap-4 overflow-y-auto no-scrollbar transition-all duration-300 ease-in-out",
-                formView === "input"
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 -translate-x-4 pointer-events-none",
-              )}
-            >
-              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm space-y-4">
-                <div
-                  className="space-y-1 animate-content-fade-in relative z-30"
-                  style={{
-                    animationDelay:
-                      "calc(var(--w-expand) + var(--d-expand) + var(--wait-content) + 0.0s)",
-                  }}
-                >
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
-                    Name
-                  </label>
-                  <RequiredInput
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    error={errors.name}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-300"
-                    placeholder="お名前を入力"
-                  />
-                </div>
-                <div
-                  className="space-y-1 animate-content-fade-in relative z-20"
-                  style={{
-                    animationDelay:
-                      "calc(var(--w-expand) + var(--d-expand) + var(--wait-content) + 0.1s)",
-                  }}
-                >
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
-                    Email
-                  </label>
-                  <RequiredInput
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    error={errors.email}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-300"
-                    placeholder="メールアドレス"
-                  />
-                </div>
-                <div
-                  className="space-y-1 animate-content-fade-in relative z-10"
-                  style={{
-                    animationDelay:
-                      "calc(var(--w-expand) + var(--d-expand) + var(--wait-content) + 0.2s)",
-                  }}
-                >
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
-                    Body
-                  </label>
-                  <RequiredTextarea
-                    name="body"
-                    value={formData.body}
-                    onChange={handleInputChange}
-                    error={errors.body}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none min-h-[120px] placeholder:text-slate-300 leading-relaxed"
-                    placeholder="お問い合わせ内容をご記入ください..."
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              className={cn(
-                "absolute inset-0 flex flex-col p-6 gap-4 overflow-y-auto no-scrollbar transition-all duration-300 ease-in-out",
-                formView === "confirm"
-                  ? "opacity-100 translate-x-0"
-                  : formView === "input"
-                    ? "opacity-0 translate-x-4 pointer-events-none"
-                    : "opacity-0 -translate-x-4 pointer-events-none",
-              )}
-            >
-              <div className="bg-white p-5 rounded-xl border border-blue-100 shadow-sm space-y-5">
-                <p className="text-xs text-center text-slate-500 font-bold mb-2">
-                  以下の内容で送信しますか？
-                </p>
-                <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
-                    Name
-                  </span>
-                  <p className="text-sm font-medium text-slate-700 px-1">
-                    {formData.name}
-                  </p>
-                </div>
-                <div className="w-full h-[1px] bg-slate-100"></div>
-                <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
-                    Email
-                  </span>
-                  <p className="text-sm font-medium text-slate-700 px-1 break-all">
-                    {formData.email}
-                  </p>
-                </div>
-                <div className="w-full h-[1px] bg-slate-100"></div>
-                <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider pl-1">
-                    Body
-                  </span>
-                  <p className="text-sm font-medium text-slate-700 px-1 whitespace-pre-wrap leading-relaxed">
-                    {formData.body}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div
-              className={cn(
-                "absolute inset-0 flex flex-col items-center justify-center p-6 gap-6 transition-all duration-500 ease-out",
-                formView === "success"
-                  ? "opacity-100 scale-100"
-                  : "opacity-0 scale-95 pointer-events-none",
-              )}
-            >
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center shadow-sm">
-                <svg
-                  className="w-10 h-10 text-green-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <div className="text-center space-y-2">
-                <h3 className="text-xl font-bold text-slate-800">Thank you!</h3>
-                <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                  お問い合わせありがとうございます。
-                  <br />
-                  内容を確認次第、ご連絡いたします。
-                </p>
               </div>
             </div>
           </div>
@@ -1183,6 +1175,36 @@ export default function DeveloperProfile() {
   const scrollAnimationRef = useRef(null);
   const isScrollingRef = useRef(false);
 
+  const frontRef = useRef(null);
+  const backRef = useRef(null);
+  const [cardHeight, setCardHeight] = useState("auto");
+
+  // 初期の高さを適切に扱うため
+  const isClient = typeof window !== "undefined";
+
+  // スムーズな高さ変更のためのResizeObserver監視
+  useEffect(() => {
+    const activeRef = isFlipped ? backRef.current : frontRef.current;
+    if (!activeRef) return;
+
+    let animationFrameId;
+    const observer = new ResizeObserver(() => {
+      animationFrameId = requestAnimationFrame(() => {
+        setCardHeight(`${activeRef.offsetHeight}px`);
+      });
+    });
+
+    observer.observe(activeRef);
+    if (activeRef.offsetHeight) {
+      setCardHeight(`${activeRef.offsetHeight}px`);
+    }
+
+    return () => {
+      observer.disconnect();
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
+  }, [isFlipped]);
+
   useEffect(() => {
     const fetchSocials = async () => {
       try {
@@ -1263,9 +1285,13 @@ export default function DeveloperProfile() {
     fetchSocials();
   }, []);
 
-  const handleThemeChange = () => {
-    setThemeIndex((prev) => (prev + 1) % THEMES.length);
-  };
+  // 15秒ごとに自動でテーマを変更
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setThemeIndex((prev) => (prev + 1) % THEMES.length);
+    }, 15000); // 15秒
+    return () => clearInterval(interval);
+  }, []);
   const handleSocialClick = (name) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -1438,43 +1464,34 @@ export default function DeveloperProfile() {
         <div className="w-full max-w-lg relative z-10 perspective-1000">
           <div
             className={cn(
-              "relative w-full transition-transform duration-700 transform-style-3d will-change-transform",
+              "relative w-full transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] transform-style-3d will-change-transform",
               isFlipped ? "rotate-y-180" : "",
             )}
+            style={isClient && cardHeight !== "auto" ? { height: cardHeight } : {}}
           >
             <div
               className={cn(
-                "backface-hidden w-full relative bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden z-10 h-auto sm:min-h-[620px]",
-                isFlipped ? "pointer-events-none" : "z-20",
+                "backface-hidden w-full bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden",
+                isFlipped ? "absolute top-0 left-0 pointer-events-none z-10" : "relative z-20",
+                cardHeight !== "auto" ? "h-full" : "h-auto"
               )}
             >
-              <div className="relative h-38 sm:h-44 overflow-hidden">
+              <div ref={frontRef} className="relative w-full h-auto">
+                <div className="relative h-38 sm:h-44 overflow-hidden">
                 {THEMES.map((theme, index) => (
                   <div
                     key={theme.name}
                     className={cn(
-                      "absolute inset-0 bg-gradient-to-br animate-mesh transition-opacity duration-[2000ms] ease-in-out",
+                      "absolute inset-0 bg-gradient-to-br animate-mesh transition-opacity duration-[4000ms] ease-in-out",
                       theme.gradient,
                       themeIndex === index ? "opacity-100" : "opacity-0",
                     )}
                   />
                 ))}
                 <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" />
-                <div className="absolute inset-0 p-4 flex justify-end items-start pointer-events-none z-30">
-                  <button
-                    onClick={handleThemeChange}
-                    className="pointer-events-auto group relative w-10 h-10 rounded-full border border-white/50 bg-gradient-to-b from-white/30 to-white/10 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] transition-all duration-[800ms] hover:scale-[1.09] active:scale-95 hover:bg-white/30 flex items-center justify-center overflow-hidden"
-                  >
-                    <div className="absolute inset-0 rounded-full shadow-[inset_0_1px_0_0_rgba(255,255,255,0.4),inset_0_-1px_0_0_rgba(0,0,0,0.1)]" />
-                    <div className="absolute inset-0 bg-white/20 blur-xl animate-breathe-glow" />
-                    <div className="relative z-10 text-white drop-shadow-sm">
-                      <ThemeDropletIcon />
-                    </div>
-                  </button>
-                </div>
               </div>
               <div className="px-10 pt-2 pb-10 flex-1 flex flex-col">
-                <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-8 mb-5 sm:mb-8">
+                <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 -mt-8 mb-5 sm:mb-8">
                   <div className="relative animate-float">
                     <img
                       src="/developer-icon.jpg"
@@ -1496,7 +1513,7 @@ export default function DeveloperProfile() {
                     </h1>
                     <span
                       className={cn(
-                        "inline-block mt-3 text-[10px] font-[700] px-[1em] py-[0.3em] rounded-2xl tracking-[0.15em] uppercase border transition-colors duration-700",
+                        "inline-block mt-2 text-[10px] font-[700] px-[1em] py-[0.3em] rounded-2xl tracking-[0.15em] uppercase border transition-colors duration-700",
                         currentTheme.accent,
                       )}
                     >
@@ -1504,7 +1521,7 @@ export default function DeveloperProfile() {
                     </span>
                   </div>
                 </div>
-                <div className="bg-slate-50/80 p-6 rounded-2xl border border-slate-100 mb-6 shadow-[inset_2px_2px_7px_rgba(0,0,0,0.12)]">
+                <div className="bg-slate-50/80 p-6 rounded-2xl border border-slate-100 mb-6 shadow-[inset_2px_2px_9px_rgba(0,0,0,0.13)]">
                   <p className="text-[13px] sm:text-base leading-loose text-slate-600 font-medium tracking-[0.04rem]">
                     趣味でWeb開発。アマチュア高校生エディター。
                     <br />
@@ -1562,17 +1579,25 @@ export default function DeveloperProfile() {
                 </div>
               </div>
             </div>
+
+            {/* FRONT FACE END WRAPPER */}
+            </div>
+
+            {/* BACK FACE */}
             <div
               className={cn(
-                "absolute top-0 left-0 w-full h-full backface-hidden rotate-y-180 z-10",
-                !isFlipped ? "pointer-events-none" : "z-20",
+                "backface-hidden rotate-y-180 w-full bg-white rounded-[32px] overflow-hidden shadow-2xl",
+                !isFlipped ? "absolute top-0 left-0 pointer-events-none z-10" : "relative z-20",
+                cardHeight !== "auto" ? "h-full" : "h-auto"
               )}
             >
+              <div ref={backRef} className="relative w-full h-auto">
               <SocialIntroCard
                 onFlipBack={handleFlipBack}
                 selectedSocial={selectedSocial}
                 socialData={socialData}
               />
+              </div>
             </div>
           </div>
           <footer
