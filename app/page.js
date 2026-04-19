@@ -812,7 +812,7 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
             <button
               onClick={onFlipBack}
               className={cn(
-                "w-full flex items-center justify-center gap-2 px-6 py-4 mb-2 font-bold text-slate-500 hover:text-slate-800 transition-colors cursor-pointer",
+                "w-full flex items-center justify-center gap-2 px-6 py-4 sm:mb-2 font-bold text-slate-500 hover:text-slate-800 transition-colors cursor-pointer",
                 mailStep !== "intro" &&
                   mailStep !== "icon_only" &&
                   "opacity-0 pointer-events-none",
