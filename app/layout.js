@@ -14,6 +14,15 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "ed1t.jp",
   description: "",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon_128.png", sizes: "128x128", type: "image/png" },
+      { url: "/favicon_192.png", sizes: "192x192", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/favicon_192.png",
+  },
 };
 
 export default function RootLayout({ children }) {
