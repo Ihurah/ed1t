@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "ed1t.jp",
-  description: "",
+  description: "趣味でWeb開発。アマチュア高校生エディター。",
   icons: {
     icon: [
       { url: "/favicon.ico" },
