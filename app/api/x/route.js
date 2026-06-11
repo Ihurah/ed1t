@@ -1,6 +1,8 @@
 // app/api/x/route.js
 import { NextResponse } from "next/server";
 
+export const revalidate = 86400;
+
 export async function GET() {
   const token = process.env.X_BEARER_TOKEN;
   const userId = process.env.X_USER_ID;
@@ -18,14 +20,14 @@ export async function GET() {
       text: "API制限のため、表示できておりません。",
       date: formatDate(new Date()),
       url: "https://x.com/i/user/1519176844703977472",
-      likes: 10, // ★モックデータ
+      likes: 10,
     },
     {
       type: "LATEST TWEET",
       text: "😢",
       date: formatDate(new Date()),
       url: "https://x.com/i/user/1519176844703977472",
-      likes: 2, // ★モックデータ
+      likes: 2,
     },
   ];
 
@@ -39,11 +41,11 @@ export async function GET() {
 
   try {
     const res = await fetch(
-      `https://api.twitter.com/2/users/${userId}/tweets?max_results=10&exclude=retweets,replies&tweet.fields=created_at,public_metrics,referenced_tweets`,
+      `https://api.twitter.com/2/users/${userId}/tweets?max_results=5&exclude=retweets,replies&tweet.fields=created_at,public_metrics,referenced_tweets`,
       {
         headers: { Authorization: `Bearer ${token}` },
         signal: controller.signal,
-        next: { revalidate: 600 },
+        next: { revalidate: 86400 },
       },
     );
 
