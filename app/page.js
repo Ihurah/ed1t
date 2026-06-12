@@ -1525,7 +1525,7 @@ export default function DeveloperProfile() {
                   <p className="text-[13px] sm:text-base leading-loose text-slate-600 font-medium tracking-[0.04rem]">
                     趣味でWeb開発。アマチュア高校生エディター。
                     <br />
-                    不具合や改善についてはSNSやメールで。
+                    不具合や改善についてはSNSやメールにて。
                   </p>
                 </div>
                 <div className="space-y-6 sm:space-y-8">
