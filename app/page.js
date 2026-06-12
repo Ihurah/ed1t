@@ -409,8 +409,8 @@ const INITIAL_SOCIAL_DATA = {
     ),
     color: "from-blue-500 to-indigo-600",
     accent: "text-blue-600 bg-blue-50 border-blue-100",
-    handle: "info@ihurah.com",
-    url: "mailto:info@ihurah.com",
+    handle: "in@ed1t.jp",
+    url: "mailto:in@ed1t.jp",
   },
 };
 
@@ -627,7 +627,9 @@ const SocialIntroCard = ({
       <div
         className={cn(
           "flex flex-col z-10 transition-opacity duration-300",
-          mailStep === "form" ? "opacity-0 pointer-events-none" : "relative h-auto opacity-100",
+          mailStep === "form"
+            ? "opacity-0 pointer-events-none"
+            : "relative h-auto opacity-100",
           mailStep === "animating" ? "blur-sm opacity-50" : "",
         )}
       >
@@ -921,7 +923,12 @@ const SocialIntroCard = ({
               </p>
             </div>
           </div>
-          <div className="relative bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] flex-1 flex flex-col py-6 overflow-y-auto no-scrollbar">
+          <div
+            className={cn(
+              "relative bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] flex-1 flex flex-col py-6 overflow-y-auto no-scrollbar",
+              formView === "success" && "items-center justify-center",
+            )}
+          >
             {formView === "input" && (
               <div className="px-6 flex flex-col gap-4 animate-fade-in-up">
                 <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm space-y-4">
@@ -1040,7 +1047,9 @@ const SocialIntroCard = ({
                   </svg>
                 </div>
                 <div className="text-center space-y-2">
-                  <h3 className="text-xl font-bold text-slate-800">Thank you!</h3>
+                  <h3 className="text-xl font-bold text-slate-800">
+                    Thank you!
+                  </h3>
                   <p className="text-xs text-slate-500 font-medium leading-relaxed">
                     お問い合わせありがとうございます。
                     <br />
@@ -1486,144 +1495,157 @@ export default function DeveloperProfile() {
           )}
         />
       </div>
-      <div ref={scrollContainerRef} className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden no-scrollbar flex items-start sm:items-center justify-center p-4 sm:p-6 py-6">
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 w-full h-full overflow-y-auto overflow-x-hidden no-scrollbar flex items-start sm:items-center justify-center p-4 sm:p-6 py-6"
+      >
         <div className="w-full max-w-lg relative z-10 perspective-1000">
           <div
             className={cn(
               "relative w-full transition-all duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] transform-style-3d will-change-transform",
               isFlipped ? "rotate-y-180" : "",
             )}
-            style={isClient && cardHeight !== "auto" ? { height: cardHeight } : {}}
+            style={
+              isClient && cardHeight !== "auto" ? { height: cardHeight } : {}
+            }
           >
             <div
               className={cn(
                 "backface-hidden w-full bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden",
-                isFlipped ? "absolute top-0 left-0 pointer-events-none z-10" : "relative z-20",
-                cardHeight !== "auto" ? "h-full" : "h-auto"
+                isFlipped
+                  ? "absolute top-0 left-0 pointer-events-none z-10"
+                  : "relative z-20",
+                cardHeight !== "auto" ? "h-full" : "h-auto",
               )}
             >
               <div ref={frontRef} className="relative w-full h-auto">
                 <div className="relative h-38 sm:h-44 overflow-hidden">
-                {THEMES.map((theme, index) => (
-                  <div
-                    key={theme.name}
-                    className={cn(
-                      "absolute inset-0 bg-gradient-to-br animate-mesh transition-opacity duration-[4000ms] ease-in-out",
-                      theme.gradient,
-                      themeIndex === index ? "opacity-100" : "opacity-0",
-                    )}
-                  />
-                ))}
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" />
-              </div>
-              <div className="px-10 pt-2 pb-10 flex-1 flex flex-col">
-                <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 -mt-8 mb-5 sm:mb-8">
-                  <div className="relative animate-float">
-                    <img
-                      src="/developer-icon.jpg"
-                      alt="いふ"
-                      className="w-32 h-32 rounded-[28px] border-[6px] border-white bg-white object-cover shadow-xl hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-8 h-8 flex items-center justify-center">
-                      <div
-                        className={cn(
-                          "relative inline-flex rounded-full h-full w-full border-4 border-white shadow-sm transition-colors duration-700 ease-in-out",
-                          statusConfig.color,
-                        )}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="text-center sm:text-left pb-2">
-                    <h1 className="text-[27px] font-black text-slate-800 tracking-tight">
-                      いふ
-                    </h1>
-                    <span
-                      className={cn(
-                        "inline-block mt-2 text-[10px] font-[700] px-[1em] py-[0.3em] rounded-2xl tracking-[0.15em] uppercase border transition-colors duration-700",
-                        currentTheme.accent,
-                      )}
-                    >
-                      EDITOR
-                    </span>
-                  </div>
-                </div>
-                <div className="bg-slate-50/80 p-6 rounded-2xl border border-slate-100 mb-6 shadow-[inset_2px_2px_9px_rgba(0,0,0,0.13)]">
-                  <p className="text-[13px] sm:text-base leading-loose text-slate-600 font-medium tracking-[0.04rem]">
-                    趣味でWeb開発。アマチュア高校生エディター。
-                    <br />
-                    不具合や改善についてはSNSやメールにて。
-                  </p>
-                </div>
-                <div className="space-y-6 sm:space-y-8">
-                  <div>
-                    <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-3 flex items-center gap-3">
-                      <span className="w-8 h-[1px] bg-slate-200"></span>Connect
-                    </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
-                      {snsLinks.map((link, i) => (
-                        <button
-                          key={link.name}
-                          onClick={() => handleSocialClick(link.name)}
-                          className="group flex items-center justify-center gap-2 px-3 py-3.5 bg-white border border-slate-200 rounded-xl transition-all duration-300 cursor-pointer hover:border-slate-300/80 hover:bg-slate-50/60"
-                          style={{
-                            animationDelay: `${i * 100}ms`,
-                            animationFillMode: "forwards",
-                          }}
-                        >
-                          <span className={cn(link.color)}>{link.icon}</span>
-                          <span className="text-xs font-bold text-slate-600">
-                            {link.name}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-3 flex items-center gap-3">
-                      <span className="w-8 h-[1px] bg-slate-200"></span>Contact
-                    </h2>
+                  {THEMES.map((theme, index) => (
                     <div
-                      className="animate-fade-in-up"
-                      style={{ animationDelay: "300ms" }}
-                    >
-                      {contactLinks.map((link) => (
-                        <button
-                          key={link.name}
-                          onClick={() => handleSocialClick(link.name)}
-                          className="w-full group flex items-center justify-center gap-3 px-4 py-4 bg-slate-800 border border-slate-700 rounded-xl transition-all duration-300 shadow-lg shadow-slate-200 cursor-pointer hover:bg-slate-900/93"
-                        >
-                          <span className="text-slate-300 group-hover:text-slate-100 transition-colors duration-300">
-                            {link.icon}
-                          </span>
-                          <span className="text-xs font-bold text-slate-300 tracking-widest group-hover:text-slate-100 transition-colors duration-300">
-                            {link.name}
-                          </span>
-                        </button>
-                      ))}
+                      key={theme.name}
+                      className={cn(
+                        "absolute inset-0 bg-gradient-to-br animate-mesh transition-opacity duration-[4000ms] ease-in-out",
+                        theme.gradient,
+                        themeIndex === index ? "opacity-100" : "opacity-0",
+                      )}
+                    />
+                  ))}
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px]" />
+                </div>
+                <div className="px-10 pt-2 pb-10 flex-1 flex flex-col">
+                  <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 -mt-8 mb-5 sm:mb-8">
+                    <div className="relative animate-float">
+                      <img
+                        src="/developer-icon.jpg"
+                        alt="いふ"
+                        className="w-32 h-32 rounded-[28px] border-[6px] border-white bg-white object-cover shadow-xl hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute -bottom-1 -right-1 w-8 h-8 flex items-center justify-center">
+                        <div
+                          className={cn(
+                            "relative inline-flex rounded-full h-full w-full border-4 border-white shadow-sm transition-colors duration-700 ease-in-out",
+                            statusConfig.color,
+                          )}
+                        ></div>
+                      </div>
+                    </div>
+                    <div className="text-center sm:text-left pb-2">
+                      <h1 className="text-[27px] font-black text-slate-800 tracking-tight">
+                        いふ
+                      </h1>
+                      <span
+                        className={cn(
+                          "inline-block mt-2 text-[10px] font-[700] px-[1em] py-[0.3em] rounded-2xl tracking-[0.15em] uppercase border transition-colors duration-700",
+                          currentTheme.accent,
+                        )}
+                      >
+                        EDITOR
+                      </span>
+                    </div>
+                  </div>
+                  <div className="bg-slate-50/80 p-6 rounded-2xl border border-slate-100 mb-6 shadow-[inset_2px_2px_9px_rgba(0,0,0,0.13)]">
+                    <p className="text-[13px] sm:text-base leading-loose text-slate-600 font-medium tracking-[0.04rem]">
+                      趣味でWeb開発。アマチュア高校生エディター。
+                      <br />
+                      不具合や改善についてはSNSやメールにて。
+                    </p>
+                  </div>
+                  <div className="space-y-6 sm:space-y-8">
+                    <div>
+                      <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-3 flex items-center gap-3">
+                        <span className="w-8 h-[1px] bg-slate-200"></span>
+                        Connect
+                      </h2>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                        {snsLinks.map((link, i) => (
+                          <button
+                            key={link.name}
+                            onClick={() => handleSocialClick(link.name)}
+                            className="group flex items-center justify-center gap-2 px-3 py-3.5 bg-white border border-slate-200 rounded-xl transition-all duration-300 cursor-pointer hover:border-slate-300/80 hover:bg-slate-50/60"
+                            style={{
+                              animationDelay: `${i * 100}ms`,
+                              animationFillMode: "forwards",
+                            }}
+                          >
+                            <span className={cn(link.color)}>{link.icon}</span>
+                            <span className="text-xs font-bold text-slate-600">
+                              {link.name}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-3 flex items-center gap-3">
+                        <span className="w-8 h-[1px] bg-slate-200"></span>
+                        Contact
+                      </h2>
+                      <div
+                        className="animate-fade-in-up"
+                        style={{ animationDelay: "300ms" }}
+                      >
+                        {contactLinks.map((link) => (
+                          <button
+                            key={link.name}
+                            onClick={() => handleSocialClick(link.name)}
+                            className="w-full group flex items-center justify-center gap-3 px-4 py-4 bg-slate-800 border border-slate-700 rounded-xl transition-all duration-300 shadow-lg shadow-slate-200 cursor-pointer hover:bg-slate-900/93"
+                          >
+                            <span className="text-slate-300 group-hover:text-slate-100 transition-colors duration-300">
+                              {link.icon}
+                            </span>
+                            <span className="text-xs font-bold text-slate-300 tracking-widest group-hover:text-slate-100 transition-colors duration-300">
+                              {link.name}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* FRONT FACE END WRAPPER */}
+              {/* FRONT FACE END WRAPPER */}
             </div>
 
             {/* BACK FACE */}
             <div
               className={cn(
                 "backface-hidden rotate-y-180 w-full bg-white rounded-[32px] overflow-hidden shadow-2xl",
-                !isFlipped ? "absolute top-0 left-0 pointer-events-none z-10" : "relative z-20",
-                cardHeight !== "auto" ? "h-full" : "h-auto"
+                !isFlipped
+                  ? "absolute top-0 left-0 pointer-events-none z-10"
+                  : "relative z-20",
+                cardHeight !== "auto" ? "h-full" : "h-auto",
               )}
             >
               <div ref={backRef} className="relative w-full h-auto">
-              <SocialIntroCard
-                onFlipBack={handleFlipBack}
-                onForceScrollTop={() => smoothScrollToTop(scrollContainerRef.current)}
-                selectedSocial={selectedSocial}
-                socialData={socialData}
-              />
+                <SocialIntroCard
+                  onFlipBack={handleFlipBack}
+                  onForceScrollTop={() =>
+                    smoothScrollToTop(scrollContainerRef.current)
+                  }
+                  selectedSocial={selectedSocial}
+                  socialData={socialData}
+                />
               </div>
             </div>
           </div>
