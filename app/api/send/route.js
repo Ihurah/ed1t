@@ -4,22 +4,21 @@ import { Resend } from "resend";
 // 環境変数からAPIキーを読み込む
 const resend = new Resend(process.env.RESEND_API_KEY);
 const contactAddress = process.env.MY_EMAIL_ADDRESS;
-const senderFrom = contactAddress
-  ? `ed1t.jp <${contactAddress}>`
-  : "ed1t.jp <onboarding@resend.dev>";
+const senderFrom =
+  process.env.RESEND_FROM_EMAIL || "ed1t.jp <no-reply@ed1t.jp>";
 
 const buildMessageText = (name, email, messageBody) => `
 --------------------------------------------------
 Webサイトからのお問い合わせ
 --------------------------------------------------
 
-■お名前:
+■お名前：
 ${name}
 
-■Email:
+■メールアドレス：
 ${email}
 
-■お問い合わせ内容:
+■お問い合わせ内容：
 ${messageBody}
       `;
 
@@ -29,7 +28,7 @@ ${name} 様
 お問い合わせありがとうございます。
 以下の内容で送信いたしました。
 
-■お問い合わせ内容:
+■お問い合わせ内容：
 ${messageBody}
 
 内容を確認のうえ、必要に応じてご連絡いたします。
@@ -52,7 +51,7 @@ export async function POST(request) {
     const adminMail = await resend.emails.send({
       from: senderFrom,
       to: [contactAddress], // .env.localで設定した自分のアドレス宛
-      subject: `お問い合わせ Message from ${name}`,
+      subject: `【ed1t.jp】お問い合わせ: ${name}`,
       reply_to: email, // 返信先を相手のアドレスに指定
       text: buildMessageText(name, email, messageBody),
     });
