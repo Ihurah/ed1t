@@ -7,6 +7,7 @@ const RequiredInput = forwardRef(
 
     const computedStyle = {
       ...style,
+      fontSize: "16px",
       ...(errorMessage ? { borderColor: "#ef4444" } : {}),
     };
 

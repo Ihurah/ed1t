@@ -471,13 +471,25 @@ const THEMES = [
   },
 ];
 
-const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
+const SocialIntroCard = ({
+  onFlipBack,
+  onForceScrollTop,
+  selectedSocial,
+  socialData,
+}) => {
   const data = selectedSocial ? socialData[selectedSocial] : null;
   const [mailStep, setMailStep] = useState("intro");
   const [formView, setFormView] = useState("input");
   const [formData, setFormData] = useState({ name: "", email: "", body: "" });
   const [errors, setErrors] = useState({});
   const [isSending, setIsSending] = useState(false);
+  const onFlipBackRef = useRef(onFlipBack);
+  const onForceScrollTopRef = useRef(onForceScrollTop);
+
+  useEffect(() => {
+    onFlipBackRef.current = onFlipBack;
+    onForceScrollTopRef.current = onForceScrollTop;
+  }, [onFlipBack, onForceScrollTop]);
 
   useEffect(() => {
     setMailStep("intro");
@@ -530,8 +542,9 @@ const SocialIntroCard = ({ onFlipBack, selectedSocial, socialData }) => {
 
   useEffect(() => {
     if (formView === "success") {
+      onForceScrollTopRef.current?.();
       const timer = setTimeout(
-        () => onFlipBack(),
+        () => onFlipBackRef.current(),
         ANIM_SETTINGS.interaction.autoCloseSuccess,
       );
       return () => clearTimeout(timer);
@@ -1326,19 +1339,20 @@ export default function DeveloperProfile() {
       cancelAnimationFrame(scrollAnimationRef.current);
       scrollAnimationRef.current = null;
     }
+    isScrollingRef.current = false;
   };
 
   // スムーズなスクロール関数
   const smoothScrollToTop = (element) => {
     if (!element) return;
     cancelScrollAnimation(); // 既存の強制スクロールがあればキャンセル
-    
+
     const startTop = element.scrollTop;
     if (startTop === 0) return;
-    
-    const duration = 1200; // 1.5秒かけてスクロール
+
+    const duration = 1650;
     const startTime = performance.now();
-    isScrollingRef.current = true; // アニメーション中フラグをON
+    isScrollingRef.current = true;
 
     const scroll = (currentTime) => {
       const elapsed = currentTime - startTime;
@@ -1346,13 +1360,14 @@ export default function DeveloperProfile() {
       const easedProgress = easeOutQuart(progress);
       element.scrollTop = startTop * (1 - easedProgress);
 
-      if (progress < 1) {
+      if (progress < 1 && isScrollingRef.current) {
         scrollAnimationRef.current = requestAnimationFrame(scroll);
       } else {
         scrollAnimationRef.current = null;
-        isScrollingRef.current = false; // アニメーション終了フラグをOFF
+        isScrollingRef.current = false;
       }
     };
+
     scrollAnimationRef.current = requestAnimationFrame(scroll);
   };
 
@@ -1395,38 +1410,43 @@ export default function DeveloperProfile() {
     if (!element) return;
 
     const handleScroll = () => {
-      // アニメーション中でなければ、スクロールアニメーションをキャンセル
       if (!isScrollingRef.current) {
         cancelScrollAnimation();
       }
     };
 
-    const handleWheel = (e) => {
-      // アニメーション中なら操作をキャンセル
-      if (isScrollingRef.current) {
-        e.preventDefault();
-      } else {
-        cancelScrollAnimation();
-      }
+    const stopForcedScroll = () => {
+      cancelScrollAnimation();
     };
 
-    const handleTouchMove = (e) => {
-      // アニメーション中なら操作をキャンセル
-      if (isScrollingRef.current) {
-        e.preventDefault();
-      } else {
-        cancelScrollAnimation();
-      }
+    const handleWheel = () => {
+      stopForcedScroll();
+    };
+
+    const handleTouchStart = () => {
+      stopForcedScroll();
+    };
+
+    const handleTouchMove = () => {
+      stopForcedScroll();
+    };
+
+    const handlePointerDown = () => {
+      stopForcedScroll();
     };
 
     element.addEventListener("scroll", handleScroll);
-    element.addEventListener("wheel", handleWheel, { passive: false });
-    element.addEventListener("touchmove", handleTouchMove, { passive: false });
+    element.addEventListener("wheel", handleWheel);
+    element.addEventListener("touchstart", handleTouchStart);
+    element.addEventListener("touchmove", handleTouchMove);
+    element.addEventListener("pointerdown", handlePointerDown);
 
     return () => {
       element.removeEventListener("scroll", handleScroll);
       element.removeEventListener("wheel", handleWheel);
+      element.removeEventListener("touchstart", handleTouchStart);
       element.removeEventListener("touchmove", handleTouchMove);
+      element.removeEventListener("pointerdown", handlePointerDown);
     };
   }, []);
 
@@ -1444,7 +1464,13 @@ export default function DeveloperProfile() {
   const contactLinks = [{ name: "MAIL", icon: <MailIcon /> }];
 
   return (
-    <div className="fixed inset-0 w-full h-full bg-gray-50 overflow-hidden flex flex-col">
+    <div
+      className="fixed inset-0 w-full h-full bg-gray-50 overflow-hidden flex flex-col"
+      style={{
+        paddingTop: "max(env(safe-area-inset-top), 12px)",
+        paddingBottom: "max(env(safe-area-inset-bottom), 12px)",
+      }}
+    >
       <AnimationStyles />
       <div className="fixed inset-0 overflow-hidden pointer-events-none transition-colors duration-1000">
         <div
@@ -1594,6 +1620,7 @@ export default function DeveloperProfile() {
               <div ref={backRef} className="relative w-full h-auto">
               <SocialIntroCard
                 onFlipBack={handleFlipBack}
+                onForceScrollTop={() => smoothScrollToTop(scrollContainerRef.current)}
                 selectedSocial={selectedSocial}
                 socialData={socialData}
               />

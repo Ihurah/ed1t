@@ -14,6 +14,11 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "ed1t.jp",
   description: "趣味でWeb開発。アマチュア高校生エディター。",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ed1t.jp",
+  },
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -25,15 +30,18 @@ export const metadata = {
   },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#f8fafc",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="ja">
-      <head>
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50`}
       >
         {children}
       </body>
