@@ -2,10 +2,16 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Roboto_Mono } from "next/font/google";
-import RequiredInput from "./components/RequiredInput";
-import RequiredTextarea from "./components/RequiredTextarea";
+import RequiredInput from "../components/RequiredInput";
+import RequiredTextarea from "../components/RequiredTextarea";
 
 const robotoMono = Roboto_Mono({ subsets: ["latin"], weight: ["400"] });
+
+const HA_GITHUB_USERNAME = "ha-3-et";
+const HA_GITHUB_URL = `https://github.com/${HA_GITHUB_USERNAME}`;
+const HA_X_USERNAME = "hahaha_vet";
+const HA_X_USER_ID = "1622496537938100224";
+const HA_X_URL = `https://x.com/${HA_X_USERNAME}`;
 
 // ▼▼▼ 設定 ▼▼▼
 const ANIM_SETTINGS = {
@@ -314,15 +320,15 @@ const XIcon = ({ className }) => (
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
 );
-const InstagramIcon = ({ className }) => (
+const DiscordIcon = ({ className }) => (
   <svg
-    width="17"
-    height="17"
+    width="18"
+    height="18"
     fill="currentColor"
     viewBox="0 0 24 24"
     className={className}
   >
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308 0.977.975 1.247 2.242 1.308 3.608 0.058 1.266 0.07 1.646 0.07 4.85s-0.012 3.584-0.07 4.85c-0.061 1.366-0.331 2.633-1.308 3.608-0.975 0.977-2.242 1.247-3.608 1.308-1.266 0.058-1.646 0.07-4.85 0.07s-3.584-0.012-4.85-0.07c-1.366-0.061-2.633-0.331-3.608-1.308-0.977-0.975-1.247-2.242-1.308-3.608-0.058-1.266-0.07-1.646-0.07-4.85s0.012-3.584 0.07-4.85c0.062-1.366 0.332-2.633 1.308-3.608 0.975-0.977 2.242-1.247 3.608-1.308 1.266-0.058 1.646-0.07 4.85-0.07zM12 0C8.741 0 8.333 0.014 7.053 0.072 2.695 0.272 0.273 2.69 0.073 7.052 0.014 8.333 0 8.741 0 12s0.014 3.667 0.072 4.947c0.2 4.353 2.614 6.777 6.981 6.98 1.281 0.058 1.689 0.072 4.948 0.072s3.667-0.014 4.948-0.072c4.354-0.2 6.782-2.618 6.979-6.98 0.058-1.28 0.072-1.689 0.072-4.948s-0.014-3.667-0.072-4.947c-0.2-4.353-2.612-6.77-6.979-6.98-1.281-0.058-1.69-0.072-4.949-0.072zM12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zM12 16c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zM18.406 4.175c-1.227 0-2.222 0.995-2.222 2.222s0.995 2.222 2.222 2.222 2.222-0.995 2.222-2.222-0.995-2.222-2.222-2.222z" />
+    <path d="M20.317 4.369A19.791 19.791 0 0 0 15.364 2.8a13.851 13.851 0 0 0-.635 1.312 18.273 18.273 0 0 0-5.458 0A13.75 13.75 0 0 0 8.636 2.8a19.736 19.736 0 0 0-4.956 1.57C.544 9.004-.304 13.524.12 17.98a19.9 19.9 0 0 0 6.073 3.07 14.8 14.8 0 0 0 1.304-2.12 12.98 12.98 0 0 1-2.05-.986c.172-.126.34-.257.502-.39a14.18 14.18 0 0 0 12.102 0c.164.133.332.264.504.39a12.98 12.98 0 0 1-2.054.987 14.8 14.8 0 0 0 1.304 2.12 19.868 19.868 0 0 0 6.075-3.07c.5-5.166-.856-9.645-3.563-13.612ZM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.095 2.157 2.418 0 1.334-.955 2.419-2.157 2.419Zm7.96 0c-1.184 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.095 2.157 2.418 0 1.334-.947 2.419-2.157 2.419Z" />
   </svg>
 );
 const GitHubIcon = ({ className }) => (
@@ -373,44 +379,57 @@ const MapPinIcon = () => (
 const INITIAL_SOCIAL_DATA = {
   X: {
     title: "X",
-    description: "ガジェットや趣味についてを気軽に。",
+    description: "詳しいことわからん",
     color: "from-gray-800 to-gray-900",
     accent: "text-slate-800 bg-slate-100 border-slate-200",
-    handle: "@Ihurah_com",
-    url: "https://x.com/Ihurah_com",
+    handle: HA_X_USERNAME ? `@${HA_X_USERNAME}` : "X",
+    url: HA_X_URL,
     activities: [],
   },
-  Instagram: {
-    title: "Instagram",
-    description: "写真の統一感を大切に。",
-    color: "from-fuchsia-500 to-orange-500",
-    accent: "text-pink-600 bg-pink-50 border-pink-100",
-    handle: "@Ihurah_com",
-    url: "https://www.instagram.com/ihurah_com/",
+  Discord: {
+    title: "Discord",
+    description: "やあ",
+    color: "from-[#5865F2] to-[#404EED]",
+    accent: "text-[#5865F2] bg-[#5865F2]/10 border-[#5865F2]/20",
+    handle: "@hahaha.ve",
+    url: "https://discord.com/users/957557391292006430",
     activities: [],
   },
   GitHub: {
     title: "GitHub",
-    description: "自己満なコードを雑に。",
+    description: "こーだー",
     color: "from-gray-700 to-gray-900",
     accent: "text-slate-900 bg-slate-100 border-slate-200",
-    handle: "Ihurah",
-    url: "https://github.com/Ihurah",
+    handle: HA_GITHUB_USERNAME,
+    url: HA_GITHUB_URL,
     activities: [],
   },
   MAIL: {
     title: "Contact",
     description: (
       <>
-        サイトの不具合・ご要望はこちらから。
-        <br />
-        その他のご連絡も。
+        いちおう設置
       </>
     ),
     color: "from-blue-500 to-indigo-600",
     accent: "text-blue-600 bg-blue-50 border-blue-100",
     handle: "in@ed1t.jp",
     url: "mailto:in@ed1t.jp",
+  },
+};
+
+const SOCIAL_BRAND_STYLES = {
+  X: {
+    color: "from-gray-800 to-gray-900",
+    accent: "text-slate-800 bg-slate-100 border-slate-200",
+  },
+  Discord: {
+    color: "from-[#5865F2] to-[#404EED]",
+    accent: "text-[#5865F2] bg-[#5865F2]/10 border-[#5865F2]/20",
+  },
+  GitHub: {
+    color: "from-gray-700 to-gray-900",
+    accent: "text-slate-900 bg-slate-100 border-slate-200",
   },
 };
 
@@ -477,7 +496,10 @@ const SocialIntroCard = ({
   selectedSocial,
   socialData,
 }) => {
-  const data = selectedSocial ? socialData[selectedSocial] : null;
+  const baseData = selectedSocial ? socialData[selectedSocial] : null;
+  const data = baseData
+    ? { ...baseData, ...(SOCIAL_BRAND_STYLES[selectedSocial] || {}) }
+    : null;
   const [mailStep, setMailStep] = useState("intro");
   const [formView, setFormView] = useState("input");
   const [formData, setFormData] = useState({ name: "", email: "", body: "" });
@@ -560,8 +582,8 @@ const SocialIntroCard = ({
   const SocialIconLarge = () => {
     const iconClass = "w-16 h-16 text-white";
     if (selectedSocial === "X") return <XIcon className={iconClass} />;
-    if (selectedSocial === "Instagram")
-      return <InstagramIcon className={iconClass} />;
+    if (selectedSocial === "Discord")
+      return <DiscordIcon className={iconClass} />;
     if (selectedSocial === "GitHub")
       return <GitHubIcon className={iconClass} />;
     if (selectedSocial === "MAIL") return <MailIcon className={iconClass} />;
@@ -821,7 +843,7 @@ const SocialIntroCard = ({
                   data.color,
                 )}
               >
-                フォローする
+                開く
               </a>
             )}
             <button
@@ -988,7 +1010,7 @@ const SocialIntroCard = ({
                       onChange={handleInputChange}
                       error={errors.body}
                       className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none min-h-[120px] placeholder:text-slate-300 leading-relaxed"
-                      placeholder="お問い合わせ内容をご記入ください..."
+                      placeholder="お問い合わせ内容"
                     />
                   </div>
                 </div>
@@ -1231,7 +1253,7 @@ export default function DeveloperProfile() {
     const fetchSocials = async () => {
       try {
         const res = await fetch(
-          "https://api.github.com/users/Ihurah/repos?sort=created&direction=desc&per_page=2",
+          `https://api.github.com/users/${HA_GITHUB_USERNAME}/repos?sort=created&direction=desc&per_page=2`,
         );
         if (res.ok) {
           const repos = await res.json();
@@ -1259,7 +1281,15 @@ export default function DeveloperProfile() {
       }
 
       try {
-        const res = await fetch("/api/x");
+        const xParams = new URLSearchParams();
+        xParams.set("profile", "ha");
+        if (HA_X_USERNAME) xParams.set("username", HA_X_USERNAME);
+        if (HA_X_USER_ID) xParams.set("userId", HA_X_USER_ID);
+        const xQuery = xParams.toString();
+
+        const res = await fetch(
+          xQuery ? `/api/x?${xQuery}` : "/api/x",
+        );
         if (res.ok) {
           const data = await res.json();
           if (data && Array.isArray(data)) {
@@ -1278,30 +1308,6 @@ export default function DeveloperProfile() {
         }
       } catch (error) {
         console.error("X Fetch Error:", error);
-      }
-
-      try {
-        const res = await fetch("/api/instagram");
-        if (res.ok) {
-          const data = await res.json();
-          if (data && Array.isArray(data)) {
-            const newActivities = data.map((item) => ({
-              type: "LATEST POST",
-              text: item.text,
-              date: item.date,
-              url: item.url,
-              meta: item.location
-                ? { type: "location", value: item.location }
-                : null,
-            }));
-            setSocialData((prev) => ({
-              ...prev,
-              Instagram: { ...prev.Instagram, activities: newActivities },
-            }));
-          }
-        }
-      } catch (error) {
-        // Silent error handling
       }
     };
     fetchSocials();
@@ -1467,7 +1473,7 @@ export default function DeveloperProfile() {
 
   const snsLinks = [
     { name: "X", icon: <XIcon />, color: "text-slate-800" },
-    { name: "Instagram", icon: <InstagramIcon />, color: "text-slate-700" },
+    { name: "Discord", icon: <DiscordIcon />, color: "text-slate-900" },
     { name: "GitHub", icon: <GitHubIcon />, color: "text-slate-900" },
   ];
   const contactLinks = [{ name: "MAIL", icon: <MailIcon /> }];
@@ -1536,8 +1542,8 @@ export default function DeveloperProfile() {
                   <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 -mt-8 mb-5 sm:mb-8">
                     <div className="relative animate-float">
                       <img
-                        src="/developer-icon.jpg"
-                        alt="いふ"
+                        src="/ha-icon.jpg"
+                        alt="ha"
                         className="w-32 h-32 rounded-[28px] border-[6px] border-white bg-white object-cover shadow-xl hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute -bottom-1 -right-1 w-8 h-8 flex items-center justify-center">
@@ -1551,23 +1557,21 @@ export default function DeveloperProfile() {
                     </div>
                     <div className="text-center sm:text-left pb-2">
                       <h1 className="text-[27px] font-black text-slate-800 tracking-tight">
-                        いふ
+                        ha
                       </h1>
-                      <span
-                        className={cn(
-                          "inline-block mt-2 text-[10px] font-[700] px-[1em] py-[0.3em] rounded-2xl tracking-[0.15em] uppercase border transition-colors duration-700",
-                          currentTheme.accent,
-                        )}
-                      >
-                        EDITOR
-                      </span>
+                      {/* <span
+  className={cn(
+    "inline-block mt-2 text-[10px] font-[700] px-[1em] py-[0.3em] rounded-2xl tracking-[0.15em] uppercase border transition-colors duration-700",
+    currentTheme.accent,
+  )}
+>
+  EDITOR
+</span> */}
                     </div>
                   </div>
                   <div className="bg-slate-50/80 p-6 rounded-2xl border border-slate-100 mb-6 shadow-[inset_2px_2px_9px_rgba(0,0,0,0.13)]">
                     <p className="text-[13px] sm:text-base leading-loose text-slate-600 font-medium tracking-[0.04rem]">
-                      趣味でWeb開発。アマチュア高校生エディター。
-                      <br />
-                      不具合や改善についてはSNSやメールにて。
+                      えでぃたー
                     </p>
                   </div>
                   <div className="space-y-6 sm:space-y-8">
@@ -1654,7 +1658,7 @@ export default function DeveloperProfile() {
             style={{ animationDelay: "500ms" }}
           >
             <p className="select-none text-[10px] font-bold text-slate-300 tracking-[0.2em]">
-              © {new Date().getFullYear()} DEVELOPED BY いふ
+              © {new Date().getFullYear()} DEVELOPED BY ha
             </p>
           </footer>
         </div>

@@ -3,9 +3,17 @@ import { NextResponse } from "next/server";
 
 export const revalidate = 86400;
 
-export async function GET() {
-  const token = process.env.X_BEARER_TOKEN;
-  const userId = process.env.X_USER_ID;
+export async function GET(request) {
+  const params = request.nextUrl.searchParams;
+  const profile = params.get("profile")?.trim();
+  const token =
+    profile === "ha"
+      ? process.env.HA_X_BEARER_TOKEN || process.env.X_BEARER_TOKEN
+      : process.env.X_BEARER_TOKEN;
+  const requestedUserId = params.get("userId")?.trim();
+  const requestedUsername = params.get("username")?.trim().replace(/^@/, "");
+  const username = requestedUsername || process.env.X_USERNAME || "";
+  let userId = requestedUserId || process.env.X_USER_ID;
 
   // 日付フォーマット関数 (yyyy.mm.dd)
   const formatDate = (dateString) => {
@@ -17,22 +25,30 @@ export async function GET() {
   const fallbackData = [
     {
       type: "LATEST TWEET",
-      text: "API制限のため、表示できておりません。",
+      text: "😿",
       date: formatDate(new Date()),
-      url: "https://x.com/i/user/1519176844703977472",
+      url: userId
+        ? `https://x.com/i/user/${userId}`
+        : username
+          ? `https://x.com/${username}`
+          : "https://x.com/",
       likes: 10,
     },
     {
       type: "LATEST TWEET",
       text: "😢",
       date: formatDate(new Date()),
-      url: "https://x.com/i/user/1519176844703977472",
+      url: userId
+        ? `https://x.com/i/user/${userId}`
+        : username
+          ? `https://x.com/${username}`
+          : "https://x.com/",
       likes: 2,
     },
   ];
 
   // 設定がない場合はモックデータを返す
-  if (!token || !userId) {
+  if (!token || (!userId && !username)) {
     return NextResponse.json(fallbackData);
   }
 
@@ -40,6 +56,30 @@ export async function GET() {
   const timeoutId = setTimeout(() => controller.abort(), 4000);
 
   try {
+    if (!userId && username) {
+      const userRes = await fetch(
+        `https://api.twitter.com/2/users/by/username/${encodeURIComponent(username)}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          signal: controller.signal,
+          next: { revalidate: 86400 },
+        },
+      );
+
+      if (!userRes.ok) {
+        const errorText = await userRes.text();
+        console.error(
+          `X User Lookup Error (Status: ${userRes.status}) - Fallback to mock data`,
+          errorText,
+        );
+        return NextResponse.json(fallbackData);
+      }
+
+      const userData = await userRes.json();
+      userId = userData.data?.id;
+      if (!userId) return NextResponse.json(fallbackData);
+    }
+
     const res = await fetch(
       `https://api.twitter.com/2/users/${userId}/tweets?max_results=5&exclude=retweets,replies&tweet.fields=created_at,public_metrics,referenced_tweets`,
       {
@@ -53,8 +93,10 @@ export async function GET() {
 
     // エラーが返ってきた場合はモックデータを返す
     if (!res.ok) {
+      const errorText = await res.text();
       console.error(
         `X API Error (Status: ${res.status}) - Fallback to mock data`,
+        errorText,
       );
       return NextResponse.json(fallbackData);
     }
@@ -73,7 +115,9 @@ export async function GET() {
       type: "LATEST TWEET",
       text: tweet.text,
       date: formatDate(tweet.created_at),
-      url: `https://twitter.com/${userId}/status/${tweet.id}`,
+      url: username
+        ? `https://x.com/${username}/status/${tweet.id}`
+        : `https://x.com/i/web/status/${tweet.id}`,
       likes: tweet.public_metrics?.like_count || 0, // ★いいね数を追加
     }));
 
