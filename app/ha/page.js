@@ -119,17 +119,6 @@ const AnimationStyles = () => (
         transform: scale(1.15);
       }
     }
-    @keyframes pulse-soft {
-      0%,
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0.7;
-        transform: scale(1.05);
-      }
-    }
     @keyframes mail-float-up {
       0% {
         transform: translateY(140px) scale(0.8);
@@ -245,9 +234,6 @@ const AnimationStyles = () => (
     .animate-breathe-glow {
       animation: breathe-glow 4s ease-in-out infinite;
     }
-    .animate-pulse-soft {
-      animation: pulse-soft 3s ease-in-out infinite;
-    }
     .animate-mail-float {
       animation: mail-float-up var(--d-float) ease-out forwards;
     }
@@ -295,22 +281,6 @@ const AnimationStyles = () => (
 );
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
-
-const ThemeDropletIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 640 640">
-    <defs>
-      <linearGradient id="iconGlass" x1="10%" y1="10%" x2="120%" y2="120%">
-        <stop offset="0%" stopColor="#f1f1f1" stopOpacity="0.95" />
-        <stop offset="100%" stopColor="#d1d1d1" stopOpacity="0.7" />
-      </linearGradient>
-    </defs>
-    <path
-      d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320z"
-      fill="url(#iconGlass)"
-      className="drop-shadow-sm"
-    />
-  </svg>
-);
 
 const XIcon = ({ className }) => (
   <svg
@@ -393,7 +363,7 @@ const MapPinIcon = () => (
 const INITIAL_SOCIAL_DATA = {
   X: {
     title: "X",
-    description: "詳しいことわからん",
+    description: "詳しいことわかんない",
     color: "from-gray-800 to-gray-900",
     accent: "text-slate-800 bg-slate-100 border-slate-200",
     handle: HA_X_USERNAME ? `@${HA_X_USERNAME}` : "X",
@@ -667,8 +637,6 @@ const SocialIntroCard = ({
       setIsSending(false);
     }
   };
-
-  const activityUrl = data.activity?.url || data.url || "#";
 
   return (
     <div
@@ -1495,10 +1463,10 @@ export default function DeveloperProfile() {
   }, []);
 
   const statusConfig = {
-    online: { color: "bg-green-500", shadow: "bg-green-500", pulse: true },
-    away: { color: "bg-yellow-500", shadow: "bg-yellow-500", pulse: false },
-    offline: { color: "bg-slate-400", shadow: "transparent", pulse: false },
-  }[status] || { color: "bg-slate-400", shadow: "transparent", pulse: false };
+    online: { color: "bg-green-500" },
+    away: { color: "bg-yellow-500" },
+    offline: { color: "bg-slate-400" },
+  }[status] || { color: "bg-slate-400" };
 
   const snsLinks = [
     { name: "X", icon: <XIcon />, color: "text-slate-800" },
