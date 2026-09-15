@@ -12,6 +12,9 @@ const HA_GITHUB_URL = `https://github.com/${HA_GITHUB_USERNAME}`;
 const HA_X_USERNAME = "hahaha_vet";
 const HA_X_USER_ID = "1622496537938100224";
 const HA_X_URL = `https://x.com/${HA_X_USERNAME}`;
+const HA_PROFILE_LINK = "Spotify"; // "Discord" or "Spotify"
+const HA_SPOTIFY_HANDLE = "hahaha";
+const HA_SPOTIFY_URL = "https://open.spotify.com/user/31wikva6yd3pcwy7bcvo2zdbmxbi";
 
 // ▼▼▼ 設定 ▼▼▼
 const ANIM_SETTINGS = {
@@ -331,6 +334,17 @@ const DiscordIcon = ({ className }) => (
     <path d="M20.317 4.369A19.791 19.791 0 0 0 15.364 2.8a13.851 13.851 0 0 0-.635 1.312 18.273 18.273 0 0 0-5.458 0A13.75 13.75 0 0 0 8.636 2.8a19.736 19.736 0 0 0-4.956 1.57C.544 9.004-.304 13.524.12 17.98a19.9 19.9 0 0 0 6.073 3.07 14.8 14.8 0 0 0 1.304-2.12 12.98 12.98 0 0 1-2.05-.986c.172-.126.34-.257.502-.39a14.18 14.18 0 0 0 12.102 0c.164.133.332.264.504.39a12.98 12.98 0 0 1-2.054.987 14.8 14.8 0 0 0 1.304 2.12 19.868 19.868 0 0 0 6.075-3.07c.5-5.166-.856-9.645-3.563-13.612ZM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.095 2.157 2.418 0 1.334-.955 2.419-2.157 2.419Zm7.96 0c-1.184 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.095 2.157 2.418 0 1.334-.947 2.419-2.157 2.419Z" />
   </svg>
 );
+const SpotifyIcon = ({ className }) => (
+  <svg
+    width="18"
+    height="18"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    className={className}
+  >
+    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0Zm5.51 17.34a.747.747 0 0 1-1.028.247c-2.817-1.722-6.361-2.111-10.538-1.157a.75.75 0 1 1-.334-1.462c4.572-1.045 8.491-.595 11.653 1.337.352.216.463.677.247 1.035Zm1.47-3.273a.937.937 0 0 1-1.287.309c-3.224-1.982-8.14-2.557-11.95-1.399a.938.938 0 1 1-.546-1.794c4.354-1.323 9.771-.682 13.475 1.595a.936.936 0 0 1 .308 1.289Zm.127-3.409C15.241 8.363 8.864 8.15 5.176 9.27a1.125 1.125 0 1 1-.654-2.153c4.234-1.286 11.278-1.035 15.733 1.608a1.125 1.125 0 0 1-1.148 1.933Z" />
+  </svg>
+);
 const GitHubIcon = ({ className }) => (
   <svg
     width="18"
@@ -395,6 +409,15 @@ const INITIAL_SOCIAL_DATA = {
     url: "https://discord.com/users/957557391292006430",
     activities: [],
   },
+  Spotify: {
+    title: "Spotify",
+    description: "ドントストップダミュージック",
+    color: "from-[#1ED760] to-[#169C46]",
+    accent: "text-[#169C46] bg-[#1ED760]/10 border-[#1ED760]/20",
+    handle: HA_SPOTIFY_HANDLE,
+    url: HA_SPOTIFY_URL,
+    activities: [],
+  },
   GitHub: {
     title: "GitHub",
     description: "こーだー",
@@ -426,6 +449,10 @@ const SOCIAL_BRAND_STYLES = {
   Discord: {
     color: "from-[#5865F2] to-[#404EED]",
     accent: "text-[#5865F2] bg-[#5865F2]/10 border-[#5865F2]/20",
+  },
+  Spotify: {
+    color: "from-[#1ED760] to-[#169C46]",
+    accent: "text-[#169C46] bg-[#1ED760]/10 border-[#1ED760]/20",
   },
   GitHub: {
     color: "from-gray-700 to-gray-900",
@@ -584,6 +611,8 @@ const SocialIntroCard = ({
     if (selectedSocial === "X") return <XIcon className={iconClass} />;
     if (selectedSocial === "Discord")
       return <DiscordIcon className={iconClass} />;
+    if (selectedSocial === "Spotify")
+      return <SpotifyIcon className={iconClass} />;
     if (selectedSocial === "GitHub")
       return <GitHubIcon className={iconClass} />;
     if (selectedSocial === "MAIL") return <MailIcon className={iconClass} />;
@@ -1473,7 +1502,9 @@ export default function DeveloperProfile() {
 
   const snsLinks = [
     { name: "X", icon: <XIcon />, color: "text-slate-800" },
-    { name: "Discord", icon: <DiscordIcon />, color: "text-slate-900" },
+    HA_PROFILE_LINK === "Spotify"
+      ? { name: "Spotify", icon: <SpotifyIcon />, color: "text-slate-900" }
+      : { name: "Discord", icon: <DiscordIcon />, color: "text-slate-900" },
     { name: "GitHub", icon: <GitHubIcon />, color: "text-slate-900" },
   ];
   const contactLinks = [{ name: "MAIL", icon: <MailIcon /> }];
