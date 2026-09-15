@@ -420,7 +420,7 @@ const INITIAL_SOCIAL_DATA = {
   },
   GitHub: {
     title: "GitHub",
-    description: "こーだー",
+    description: "もうバイブコーダー",
     color: "from-gray-700 to-gray-900",
     accent: "text-slate-900 bg-slate-100 border-slate-200",
     handle: HA_GITHUB_USERNAME,
