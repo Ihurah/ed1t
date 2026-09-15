@@ -32,7 +32,7 @@ export async function GET(request) {
         : username
           ? `https://x.com/${username}`
           : "https://x.com/",
-      likes: 10,
+      likes: 3,
     },
     {
       type: "LATEST TWEET",
