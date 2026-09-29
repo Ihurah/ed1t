@@ -1569,7 +1569,6 @@ export default function DeveloperProfile() {
                         Contact
                       </h2>
                       <div
-                        className="animate-fade-in-up"
                         style={{ animationDelay: "300ms" }}
                       >
                         {contactLinks.map((link) => (
@@ -1618,7 +1617,7 @@ export default function DeveloperProfile() {
             </div>
           </div>
           <footer
-            className="mt-10 text-center animate-fade-in-up"
+            className="mt-10 text-center"
             style={{ animationDelay: "500ms" }}
           >
             <p className="select-none text-[10px] font-bold text-slate-300 tracking-[0.2em]">
