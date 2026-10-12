@@ -4,13 +4,13 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Roboto_Mono } from "next/font/google";
 import RequiredInput from "../components/RequiredInput";
 import RequiredTextarea from "../components/RequiredTextarea";
+import { X_PROFILES } from "../config/x-profiles.mjs";
 
 const robotoMono = Roboto_Mono({ subsets: ["latin"], weight: ["400"] });
 
 const HA_GITHUB_USERNAME = "ha-3-et";
 const HA_GITHUB_URL = `https://github.com/${HA_GITHUB_USERNAME}`;
-const HA_X_USERNAME = "hahaha_vet";
-const HA_X_USER_ID = "1622496537938100224";
+const HA_X_USERNAME = X_PROFILES.ha.username;
 const HA_X_URL = `https://x.com/${HA_X_USERNAME}`;
 const HA_PROFILE_LINK = "Spotify"; // "Discord" or "Spotify"
 const HA_SPOTIFY_HANDLE = "hahaha";
@@ -1278,15 +1278,7 @@ export default function DeveloperProfile() {
       }
 
       try {
-        const xParams = new URLSearchParams();
-        xParams.set("profile", "ha");
-        if (HA_X_USERNAME) xParams.set("username", HA_X_USERNAME);
-        if (HA_X_USER_ID) xParams.set("userId", HA_X_USER_ID);
-        const xQuery = xParams.toString();
-
-        const res = await fetch(
-          xQuery ? `/api/x?${xQuery}` : "/api/x",
-        );
+        const res = await fetch("/api/x?profile=ha");
         if (res.ok) {
           const data = await res.json();
           if (data && Array.isArray(data)) {

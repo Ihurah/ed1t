@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Roboto_Mono } from "next/font/google";
 import RequiredInput from "./components/RequiredInput";
 import RequiredTextarea from "./components/RequiredTextarea";
+import { X_PROFILES } from "./config/x-profiles.mjs";
 
 const robotoMono = Roboto_Mono({ subsets: ["latin"], weight: ["400"] });
 
@@ -346,8 +347,8 @@ const INITIAL_SOCIAL_DATA = {
     description: "ガジェットや趣味についてを気軽に。",
     color: "from-gray-800 to-gray-900",
     accent: "text-slate-800 bg-slate-100 border-slate-200",
-    handle: "@Ihurah_com",
-    url: "https://x.com/Ihurah_com",
+    handle: `@${X_PROFILES.main.username}`,
+    url: `https://x.com/${X_PROFILES.main.username}`,
     activities: [],
   },
   Instagram: {

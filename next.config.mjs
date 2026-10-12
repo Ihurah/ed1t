@@ -2,6 +2,7 @@
 const nextConfig = {
   /* config options here */
   reactCompiler: true,
+  serverExternalPackages: ["agent-twitter-client", "x-client-transaction-id"],
 
   async redirects() {
     if (process.env.REDIRECT_SUBDOMAIN && process.env.REDIRECT_DESTINATION) {
